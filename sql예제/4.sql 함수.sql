@@ -214,9 +214,10 @@ FROM tb_sal;
 -- expr1: Null을 가질 수 있는 값이나 표현식
 -- expr2: expr1이 Null일 경우 대체할 값
 SELECT 
-    emp_no,
-    emp_nm,
-    NVL(direct_manager_emp_no, '최상위관리자') AS 관리자
+    emp_no
+   ,emp_nm
+   --,direct_manager_emp_no
+   ,NVL(direct_manager_emp_no, '최상위관리자') AS 관리자
 FROM tb_emp;
 
 SELECT 
@@ -231,10 +232,16 @@ WHERE emp_nm = '김회장'
 ;
 
 
-SELECT 
+SELECT
+ -- MAX는 최대값을 찾는 함수
+    -- MAX(emp_nm) -- 맥스에 없는 애들을 조회하면 null이 나온다.
     NVL(MAX(emp_nm), '존재안함') AS emp_nm
+    
 FROM tb_emp
-WHERE emp_nm = '박찬호';
+WHERE emp_nm = '박찬호'; -- 없는 사람을 조회하면 null이 나오는 것이 아님.
+                        -- null인 값을 가진 것을 조회할때 null이 나오는 것이다.
+                        
+                        -- ** 공집합이 출력 되면 max로 null 로 만들고 NAL을 활용해 NULL의 메시지를 출력.
 
 -- NVL2(expr1, expr2, expr3)
 -- expr1의 값이 Null이 아니면 expr2를 반환, Null이면 expr3를 반환
@@ -246,11 +253,12 @@ FROM tb_emp;
 -- NULLIF(expr1, expr2)
 -- 두 값이 같으면 NULL리턴, 다르면 expr1 리턴
 SELECT
-    NULLIF('박찬호', '박찬호')
+   -- NULLIF('박찬호', '박찬호')
+    NVL2(NULLIF('박찬호', '박찬호'),'일치합니다','다릅니다')
 FROM dual;
 
 SELECT
-    NULLIF('박찬호', '박지성')
+    NVL2(NULLIF('박찬호', '박지성'),'다릅니다','일치합니다.')
 FROM dual;
 
 -- COALESCE(expr1, ...)
