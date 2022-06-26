@@ -11,7 +11,7 @@ FROM tb_emp;
  -- 1행 2019.02.25에 5번 사원이 5,620,000 을 수령했다.
  
  -- 5번 사원의 월급 수령 내역 확인
- SELECT * FROM tb_sal_his
+ SELECT * FROM tb_sal_his 
  WHERE emp_no = '1000000005';
  
  -- 5번 사원의 총 월급 수령액과 월급의 평균액, 제일 많은 월급과 제일 적은 월급
