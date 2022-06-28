@@ -1,376 +1,45 @@
 
-
-CREATE TABLE 일자별매출_93 (
-  일자 DATE,
-  매출액 NUMBER(5)
-);
-
-INSERT INTO 일자별매출_93 VALUES ('2015-11-01', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-02', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-03', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-04', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-05', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-06', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-07', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-08', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-09', 1000);
-INSERT INTO 일자별매출_93 VALUES ('2015-11-10', 1000);
-COMMIT;
-
-SELECT * FROM 일자별매출_93;
-
--- 보기 1
-SELECT A.일자, SUM(A.매출액) AS 누적매출액
-FROM 일자별매출_93 A
-GROUP BY A.일자
-ORDER BY A.일자;
-
--- 보기 2
-SELECT A.일자 A , A.매출액 A매출, B.일자 B, B.매출액 B매출--, SUM(B.매출액) AS 누적매출액
-FROM 일자별매출_93 A 
-JOIN 일자별매출_93 B 
-ON(A.일자 >= B.일자)
--- GROUP BY B.일자
-ORDER BY A.일자;
-
-
-
--- # 86번
-
-DROP TABLE 회원기본정보_86;
-
-CREATE TABLE 회원기본정보_86 (
-  USER_ID VARCHAR2(200) PRIMARY KEY
-);
-
-DROP TABLE 회원상세정보_86;
-
-CREATE TABLE 회원상세정보_86(
-  USER_ID VARCHAR2(200) PRIMARY KEY
-);
-
-ALTER TABLE 회원상세정보_86 
-ADD CONSTRAINT fk_USER_ID 
-FOREIGN KEY (USER_ID) 
-REFERENCES 회원기본정보_86 (USER_ID);
-
-INSERT INTO 회원기본정보_86 VALUES('abc01');
-INSERT INTO 회원기본정보_86 VALUES('abc02');
-INSERT INTO 회원기본정보_86 VALUES('abc03');
-commit;
-
-INSERT INTO 회원상세정보_86 VALUES('abc01');
-INSERT INTO 회원상세정보_86 VALUES('abc02');
-INSERT INTO 회원상세정보_86 VALUES('abc03');
-commit;
-
-INSERT INTO 회원상세정보_86 VALUES('abc04');
-
-SELECT * FROM "회원기본정보_86";
-SELECT * FROM "회원상세정보_86";
-
--- 보기 1번
-SELECT 
-USER_ID
-FROM 회원기본정보_86
-MINUS
-SELECT
-USER_ID
-FROM 회원기본정보_86
-;
-
--- 보기 2번
-SELECT 
-USER_ID
-FROM 회원기본정보_86
-UNION ALL
-SELECT
-USER_ID
-FROM 회원기본정보_86
-;
-
--- 보기 3번
-SELECT USER_ID FROM 회원기본정보_86
-INTERSECT
-SELECT USER_ID FROM 회원기본정보_86
-;
-
-SELECT 
-A.USER_ID 
-FROM 회원기본정보_86 A
-INNER JOIN 회원상세정보_86 B
-ON A.USER_ID = B.USER_ID
-;
-
--- 보기 4
-SELECT user_id FROM 회원기본정보_86
-INTERSECT
-SELECT user_id FROM 회원상세정보_86
-;
-
-SELECT user_id FROM 회원기본정보_86
-UNION
-SELECT user_id FROM 회원상세정보_86
-;
-
--- #91번
-DROP TABLE 부서_91;
-
--- 테이블 작성
--- 부서테이블
-CREATE TABLE 부서_91 (
- 부서코드 VARCHAR2(20),
- 부서명 VARCHAR2(100),
- 상위부서코드 VARCHAR2(20),
- CONSTRAINT pk_부서_91 PRIMARY KEY(부서코드)
-);
-
--- fk 선언
-ALTER TABLE 부서_91 
-ADD CONSTRAINT fk_상위부서코드_91 
-FOREIGN KEY (상위부서코드)
-REFERENCES 부서_91 (부서코드);
-
-INSERT INTO 부서_91 VALUES(100, '아시아부', NULL);
-INSERT INTO 부서_91 VALUES(110, '한국지사', 100);
-INSERT INTO 부서_91 VALUES(111, '서울지점', 110);
-INSERT INTO 부서_91 VALUES(112, '부산지점', 110);
-INSERT INTO 부서_91 VALUES(120, '일본지사', 100);
-INSERT INTO 부서_91 VALUES(121, '도쿄지점', 120);
-INSERT INTO 부서_91 VALUES(122, '오사카지점', 120);
-INSERT INTO 부서_91 VALUES(130, '중국지사', 100);
-INSERT INTO 부서_91 VALUES(131, '베이징지점', 130);
-INSERT INTO 부서_91 VALUES(132, '상하이지점', 130);
-INSERT INTO 부서_91 VALUES(200, '남유럽지부', NULL);
-INSERT INTO 부서_91 VALUES(210, '스페인지사', 200);
-INSERT INTO 부서_91 VALUES(211, '마드리드지점', 210);
-INSERT INTO 부서_91 VALUES(212, '그라나다지점', 210);
-INSERT INTO 부서_91 VALUES(220, '포루투갈지사', 200);
-INSERT INTO 부서_91 VALUES(221, '리스본지점', 220);
-INSERT INTO 부서_91 VALUES(222, '그라나다지점', 220);
-
-COMMIT;
-
--- 매출 테이블
-DROP TABLE 매출_91;
-CREATE TABLE 매출_91(
-부서코드 VARCHAR2(20),
-매출액 NUMBER(20));
-
-INSERT INTO 매출_91 VALUES(111,1000);
-INSERT INTO 매출_91 VALUES(112,2000);
-INSERT INTO 매출_91 VALUES(121,1500);
-INSERT INTO 매출_91 VALUES(122,1000);
-INSERT INTO 매출_91 VALUES(131,1500);
-INSERT INTO 매출_91 VALUES(132,2000);
-INSERT INTO 매출_91 VALUES(211,2000);
-INSERT INTO 매출_91 VALUES(212,1500);
-INSERT INTO 매출_91 VALUES(221,1000);
-INSERT INTO 매출_91 VALUES(222,2000);
-COMMIT;
-
-SELECT * FROM 부서_91;
-SELECT * FROM 매출_91;
-
--- 보기 1번
-SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL
-FROM (
-    SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
-    FROM 부서_91
-    START WITH 부서코드 = '120'
-    CONNECT BY PRIOR 상위부서코드 = 부서코드
-    UNION
-    SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
-    FROM 부서_91
-    START WITH 부서코드 = '120'
-    CONNECT BY 상위부서코드 = PRIOR 부서코드) 
-    A LEFT OUTER JOIN 매출_91 B
-ON (A.부서코드 = B.부서코드)
-ORDER BY A.부서코드;
-
--- 보기 2번
-SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL
-FROM (
-    SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
-    FROM 부서_91
-    START WITH 부서코드 = '100'
-    CONNECT BY 상위부서코드 = PRIOR 부서코드
-    )
-    A LEFT OUTER JOIN 매출_91 B
-ON (A.부서코드 = B.부서코드)
-ORDER BY A.부서코드;
-
--- 보기 3번
-SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL
-FROM (
-    SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
-    FROM 부서_91
-    START WITH 부서코드 = '121'
-    CONNECT BY PRIOR 상위부서코드 = 부서코드)
-    A LEFT OUTER JOIN 매출_91 B
-ON (A.부서코드 = B.부서코드)
-ORDER BY A.부서코드;
-
--- 보기 4번
-
-SELECT A.부서코드, A.부서명, A.상위부서코드, B.매출액, LVL
-FROM (
-    SELECT 부서코드, 부서명, 상위부서코드, LEVEL AS LVL
-    FROM 부서_91
-    
-    START WITH 부서코드 =
-    
-    (SELECT 부서코드 FROM 부서_91
-    WHERE 상위부서코드 IS NULL 
-    START WITH 부서코드 = '120'
-    CONNECT BY PRIOR 상위부서코드 = 부서코드)
-    
-    CONNECT BY 상위부서코드 = PRIOR 부서코드)
-    A LEFT OUTER JOIN 매출_91 B
-    ON (A.부서코드 = B.부서코드)
-    ORDER BY A.부서코드;
-    
-    
--- # 22번 문제
-
-
--- 22번 
-CREATE TABLE 고객 (
-    고객ID VARCHAR2(20) NOT NULL 
-    , 고객명 VARCHAR(20) NULL 
-    , 가입일시 DATE NOT NULL 
-);
-ALTER TABLE 고객 ADD CONSTRAINT PK_고객ID PRIMARY KEY (고객ID);
-
-CREATE TABLE 주문 (
-주문번호 VARCHAR(20) NOT NULL  
-, 고객ID VARCHAR(20) NOT NULL
-, 주문일시 DATE NOT NULL 
-);
-
-ALTER TABLE 주문 ADD CONSTRAINT FK_고객ID FOREIGN KEY (고객ID) REFERENCES 고객(고객ID);
-
-INSERT INTO 고객 VALUES('C001','홍길동','2013-12-12');
-INSERT INTO 고객 VALUES('C002','이순신','2013-12-12');
-
-COMMIT;
-
-INSERT INTO 주문 VALUES('0001','C001','2013-12-24');
-INSERT INTO 주문 VALUES('0002','C001','2013-12-25');
-INSERT INTO 주문 VALUES('0003','C002','2013-12-26');
-INSERT INTO 주문 VALUES('0004','C002','2013-12-27');
-
-SELECT * FROM 고객 ; 
-SELECT * FROM 주문 ;  
-
--- # 17번 문제
-
---17 번 
-
-CREATE TABLE 부서 (
-부서번호 CHAR(10) 
-,부서명 CHAR(10)
-);
-
-ALTER TABLE 부서 ADD CONSTRAINT PK_부서_부서번호 PRIMARY KEY (부서번호);
-COMMIT;
-
-CREATE TABLE 직원 (
-직원번호 CHAR(10) ,
-소속부서 CHAR(10)
-);
-
-ALTER TABLE 직원 ADD CONSTRAINT PK_직원_직원번호 PRIMARY KEY (직원번호);
-ALTER TABLE 직원 ADD CONSTRAINT FK_직원_소속부서 FOREIGN KEY (소속부서) REFERENCES 부서(부서번호) ON DELETE CASCADE;
-
-INSERT INTO 부서  VALUES ('10' , '영업과');
-INSERT INTO 부서  VALUES ('20' , '기획과');
-
-INSERT INTO 직원  VALUES ('1000' , '10');
-INSERT INTO 직원  VALUES ('2000' , '20');
-INSERT INTO 직원  VALUES ('3000' , '20');
-COMMIT; 
-
-SELECT * FROM 부서 ;
-SELECT * FROM 직원 ;
-
-
-SELECT COUNT(직원번호) FROM 직원 ;
-SELECT * FROM 직원 ;
-
-DELETE FROM 부서 WHERE 부서번호 = '20';
-SELECT * FROM 부서 ;
-
-SELECT COUNT(직원번호) FROM 직원 ;
-SELECT * FROM 직원 ;
-
-COMMIT; 
-
--- 68번 문제
-
-CREATE TABLE 고객 (
-고객번호 VARCHAR2(20),
-이름 VARCHAR2(20),
-등급 VARCHAR2(20),
-CONSTRAINT pk_고객 PRIMARY KEY(고객번호));
-
-CREATE TABLE 구매정보 (
-구매번호 VARCHAR(20),
-구매금액 NUMBER(20),
-고객번호 VARCHAR(20),
-CONSTRAINT pk_구매정보 PRIMARY KEY(구매번호),
-CONSTRAINT fk_고객번호 FOREIGN KEY(고객번호) REFERENCES 고객(고객번호)
-);
-
-INSERT INTO 고객 VALUES('001', '홍길동', '브론즈');
-INSERT INTO 고객 VALUES('002', '고길동', '실버');
-INSERT INTO 고객 VALUES('003', '황길동', '골드');
-COMMIT;
-
-INSERT INTO 구매정보 VALUES('001', 50000, '001');
-INSERT INTO 구매정보 VALUES('002', 700000, '003');
-INSERT INTO 구매정보 VALUES('003', 880000, '003');
-INSERT INTO 구매정보 VALUES('004', 990000, '003');
-COMMIT;
-
-SELECT * FROM 고객;
-SELECT * FROM 구매정보;
-
--- 1번 보기
+-- 9번 문제
+DROP TABLE T;
+DROP TABLE S;
+DROP TABLE R;
+
+CREATE TABLE T
+(C INTEGER PRIMARY KEY,
+D INTEGER);
+
+INSERT INTO T VALUES(1,1);
+INSERT INTO T VALUES(2,1);
 
 SELECT
-A.이름, A.등급 
-FROM 고객 A
-INNER JOIN 구매정보 B 
-ON A.고객번호 = B.고객번호
-GROUP BY A.이름, A.등급
-HAVING SUM(B.구매번호) >= 3
-;
+    * FROM
+    T;
+    
+CREATE TABLE S
+(B INTEGER PRIMARY KEY,
+C INTEGER REFERENCES T(C)ON DELETE CASCADE);
 
--- 2번 보기
-
-SELECT
-A.이름, A.등급 
-FROM 고객 A
-
-INNER JOIN 구매정보 B 
-ON A.고객번호 = B.고객번호
-
-GROUP BY A.이름, A.등급
-
-HAVING COUNT(B.구매번호) >= 3
-;
-
--- 3번 보기
+INSERT INTO S VALUES(1,1);
+INSERT INTO S VALUES(2,1);
 
 SELECT
-A.이름, A.등급 
-FROM 고객 A
+    * FROM
+    S;
+    
+CREATE TABLE R
+(A INTEGER PRIMARY KEY,
+ B INTEGER REFERENCES S(B)ON DELETE SET NULL);
 
-LEFT OUTER JOIN 구매정보 B 
-ON A.고객번호 = B.고객번호
+INSERT INTO R VALUES(1,1);
+INSERT INTO R VALUES(2,2);
 
-GROUP BY A.이름, A.등급
+SELECT
+    * FROM
+    R;
+    
+DELETE FROM T;  -- T는 당연히 삭제  
 
-HAVING SUM(B.구매번호) >= 3
-;
+SELECT * FROM S; -- S 테이블에 C 칼럼에 CASCADE T(C)가 걸려 있어서 삭제
+
+SELECT * FROM R;
+ROLLBACK;    
