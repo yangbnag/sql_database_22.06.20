@@ -42,13 +42,22 @@ in_date DATE DEFAULT SYSDATE,
 in_detail VARCHAR2(30),
 in_amt number NOT NULL,
 category_num NUMBER);
+
 ALTER TABLE income MODIFY(category_num NUMBER);
+
+
+SELECT 
+
+    TO_CHAR(in_date, 'yyyy-mm') 테스트
+       
+FROM income;
 
 -- 수입내역 카테고리
 CREATE TABLE income_category (
 in_ca_serial_nm NUMBER(5) PRIMARY KEY,
 in_ca_detail VARCHAR2(30),
-in_category_num CHAR(5));
+in_category_num NUMBER);
+
 ALTER TABLE income_category MODIFY(in_category_num NUMBER);
 
 
@@ -81,7 +90,7 @@ CREATE SEQUENCE seq_income;
 CREATE SEQUENCE seq_expense;
 
 
-DELETE FROM income;
+-- 내역 입력
 
 INSERT INTO income_category(in_ca_serial_nm, in_ca_detail) VALUES('001', '월급');
 INSERT INTO income_category(in_ca_serial_nm, in_ca_detail) VALUES('002', '기타소득');
@@ -92,7 +101,7 @@ VALUES(1,'22-06-24','국민취업지원제도',500000,'002');
 UPDATE income SET income.in_date = '22-06-24' WHERE income.in_serial_nm = 2;
 
 INSERT INTO income(in_serial_nm, in_date, in_detail, in_amt, category_num) 
-VALUES(seq_income.nextval,'22-06-25','실비보험료 환급',100000,'002');
+VALUES(seq_income.nextval,'22-06-27','실비보험료 환급',100000,'002');
 
 INSERT INTO income(in_serial_nm, in_date, in_detail, in_amt, category_num) 
 VALUES(seq_income.nextval,'22-06-30','6월 월급',2500000,'001');
@@ -113,14 +122,14 @@ INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) 
 INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) VALUES(seq_expense.nextval, '22-06-24', '대두네순두부', 8000, '003');
 INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) VALUES(seq_expense.nextval, '22-06-25', '전기세', 12000, '005');
 
-ALTER SEQUENCE seq_income INCREMENT BY -1; 
+ALTER SEQUENCE seq_expense INCREMENT BY -1; 
 -- ALTER로 시퀀스 수정
 -- INCREMENT BY는 증감 단위. -1로 설정
 
-SELECT seq_income.NEXTVAL FROM DUAL; 
+SELECT seq_expense.NEXTVAL FROM DUAL; 
 -- 증감 단위(-1) 만큼 현재 시퀀스에서 더해짐
 -- 테스트 데이터 입력
-ALTER SEQUENCE seq_income INCREMENT BY 1;
+ALTER SEQUENCE seq_expense INCREMENT BY 1;
 
 SELECT out_serial_nm FROM expense;
 
@@ -171,7 +180,7 @@ SELECT * FROM income;
  FROM income A
  WHERE A.category_num = '002';
  
-SELECT * FROM income;
+SELECT * FROM income order by in_date;
 SELECT * FROM income A WHERE a.in_serial_nm = 1 ;
 SELECT * FROM expense_category;
 SELECT * FROM income_category;
@@ -183,6 +192,9 @@ commit;
 
 INSERT INTO income(in_serial_nm, in_date, in_detail, in_amt, category_num) 
 VALUES(seq_income.nextval,'22-06-30','6월 보너스',2500000,'001');
+
+UPDATE income SET in_serial_nm = 1, in_date = '22-05-30', in_detail = '추가보너스' ,in_amt = 1000000 
+WHERE in_serial_nm = 4;
 
 rollback;
 
