@@ -113,14 +113,14 @@ INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) 
 INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) VALUES(seq_expense.nextval, '22-06-24', '대두네순두부', 8000, '003');
 INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) VALUES(seq_expense.nextval, '22-06-25', '전기세', 12000, '005');
 
-ALTER SEQUENCE seq_income INCREMENT BY -1; 
+ALTER SEQUENCE seq_expense INCREMENT BY -1; 
 -- ALTER로 시퀀스 수정
 -- INCREMENT BY는 증감 단위. -1로 설정
 
-SELECT seq_income.NEXTVAL FROM DUAL; 
+SELECT seq_expense.NEXTVAL FROM DUAL; 
 -- 증감 단위(-1) 만큼 현재 시퀀스에서 더해짐
 -- 테스트 데이터 입력
-ALTER SEQUENCE seq_income INCREMENT BY 1;
+ALTER SEQUENCE seq_expense INCREMENT BY 1;
 
 SELECT out_serial_nm FROM expense;
 
@@ -186,6 +186,23 @@ VALUES(seq_income.nextval,'22-06-30','6월 보너스',2500000,'001');
 
 rollback;
 
+SELECT 
+ A.out_serial_nm, TO_CHAR(A.out_date, 'yy-mm-dd') out_date, A.out_detail, A.out_amt
+FROM expense A, expense_category B
+WHERE a.category_num = b.out_ca_serial_nm
+AND b.out_ca_serial_nm = 3
+;
+
+SELECT * FROM expense;
+SELECT * FROM expense_category;
+
+DELETE FROM expense WHERE out_serial_nm = 1;
+
+commit;
+rollback;
+
+INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) VALUES(seq_expense.nextval, '22-07-03', '장보기', 5000, '002');
+INSERT INTO expense(out_serial_nm, out_date, out_detail, out_amt, category_num) VALUES(seq_expense.nextval, '22-08-01' , '테스트', 5000, 1)"
   
   
 
