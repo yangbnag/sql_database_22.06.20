@@ -1,23 +1,26 @@
-CREATE SEQUENCE seq_tbl_score;
 
-CREATE TABLE tbl_score (
-    stu_num NUMBER(10)
-    , stu_name VARCHAR2(20) NOT NULL
-    , kor NUMBER(3) NOT NULL
-    , eng NUMBER(3) NOT NULL
-    , math NUMBER(3) NOT NULL
-    , total NUMBER(3)
-    , average NUMBER(5,2)
-    , grade CHAR(1)
-    , CONSTRAINT pk_tbl_score PRIMARY KEY (stu_num)
+select * from tbl_score;
+
+
+
+CREATE SEQUENCE seq_board;
+
+DROP TABLE board;
+CREATE TABLE board (
+    board_no NUMBER(10),
+    writer VARCHAR2(20) NOT NULL,
+    title VARCHAR2(200) NOT NULL,
+    content VARCHAR2(2000),
+    view_cnt NUMBER(10) DEFAULT 0,
+    reg_date DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_board PRIMARY KEY (board_no)
 );
 
-SELECT * FROM tbl_score;
+INSERT INTO board 
+(board_no, writer, title, content)
+VALUES (seq_board.nextval, '²Ü²ÜÀÌ','¾ÆÄ§¹ä¸ÔÀÚ' ,'¾ÆÄ§¿¡´Â µÎ³¢- ºí¶óºí¶ó');
 
-SELECT *
-  FROM tbl_score 
-  WHERE average = (SELECT MAX(average) from tbl_score);
-  
-  SELECT *
-  FROM tbl_score 
-  WHERE average = (SELECT MIN(average) from tbl_score);
+commit;
+
+SELECT * FROM board;
+
